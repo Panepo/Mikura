@@ -16,18 +16,11 @@ class Settings:
     # Real Shigure JWTs carry no name/role claims, so this is the only reliable identity signal.
     managers: list[str] = _split_csv(os.getenv("MANAGERS", ""))
 
-    # JWT
-    jwt_secret_key: str = os.getenv("JWT_SECRET_KEY", "change-me-in-env")
-    jwt_algorithm: str = os.getenv("JWT_ALGORITHM", "HS256")
-    jwt_expire_minutes: int = int(os.getenv("JWT_EXPIRE_MINUTES", "60"))
-
     # Shigure Data Center
     shigure_api_base_url: str = os.getenv("SHIGURE_API_BASE_URL", "http://localhost:4000")
     # Static bearer token used by Mikura to call Shigure's project search API on behalf of the server
+    # and for unattended weekly builds
     shigure_token: str = os.getenv("SHIGURE_TOKEN", "")
-    # Service account used by the scheduler to obtain a token for unattended weekly builds
-    shigure_service_username: str = os.getenv("SHIGURE_SERVICE_USERNAME", "")
-    shigure_service_password: str = os.getenv("SHIGURE_SERVICE_PASSWORD", "")
 
     # Database
     database_url: str = os.getenv("DATABASE_URL", "sqlite+aiosqlite:///./mikura.db")

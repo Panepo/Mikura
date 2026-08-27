@@ -142,3 +142,24 @@ async def list_files(
         select(BuildFile).where(BuildFile.project_id == project_id).order_by(BuildFile.created_at.desc())
     )
     return list(result)
+
+
+@router.delete("/{project_id}")
+async def delete_project(
+    project_id: int,
+    db: AsyncSession = Depends(get_db),
+    user: CurrentUser = Depends(require_manager),
+):
+    project = await _get_project_or_404(db, project_id)
+
+    # Unregister schedule if it exists
+    schedule = await db.scalar(select(BuildSchedule).where(BuildSchedule.project_id == project_id))
+    if schedule:
+        await db.delete(schedule)
+        scheduler_module.unregister_schedule(project_id)
+
+    # Delete the project (histories and files will be deleted via cascade)
+    await db.delete(project)
+    await db.commit()
+
+    return {"message": "Project removed"}

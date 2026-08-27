@@ -181,8 +181,6 @@ cython_debug/
 .cursorindexingignore
 
 # Custom
-.github/reference/*
-tests/*.pdf
 uploads/*.*
 chunks/*.*
 

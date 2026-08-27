@@ -128,7 +128,24 @@
           alert('Scheduled for weekly build (Mon 02:00).');
         };
 
-        actionsCell.append(buildBtn, scheduleBtn);
+        const removeBtn = document.createElement('button');
+        removeBtn.textContent = 'Remove';
+        removeBtn.style.color = 'red';
+        removeBtn.onclick = async () => {
+          if (!confirm(`Are you sure you want to remove project "${project.name}"?`)) {
+            return;
+          }
+          removeBtn.disabled = true;
+          try {
+            await api(`/projects/${project.id}`, { method: 'DELETE' });
+            await loadProjects();
+          } catch (err) {
+            alert('Failed to remove project.');
+            removeBtn.disabled = false;
+          }
+        };
+
+        actionsCell.append(buildBtn, scheduleBtn, removeBtn);
         tbody.appendChild(tr);
       }
     }
