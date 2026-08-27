@@ -185,3 +185,7 @@ cython_debug/
 tests/*.pdf
 uploads/*.*
 chunks/*.*
+
+# Mikura runtime artifacts
+mikura.db
+builds/

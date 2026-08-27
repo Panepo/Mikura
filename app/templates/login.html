@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <title>Mikura - Login</title>
+  <link rel="stylesheet" href="/static/style.css" />
+</head>
+
+<body>
+  <div class="login-box">
+    <h1>Mikura</h1>
+    <h2>Universal Cap Packaging System</h2>
+    <form id="login-form">
+      <label>Username
+        <input type="text" id="username" name="username" required />
+      </label>
+      <label>Password
+        <input type="password" id="password" name="password" required />
+      </label>
+      <button type="submit">Log in</button>
+    </form>
+    <p id="error" class="error"></p>
+  </div>
+  <script>
+    document.getElementById('login-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const username = document.getElementById('username').value;
+      const password = document.getElementById('password').value;
+      const errorEl = document.getElementById('error');
+      errorEl.textContent = '';
+      try {
+        const res = await fetch('/auth', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ username, password }),
+        });
+        if (!res.ok) {
+          const body = await res.json().catch(() => ({}));
+          throw new Error(body.detail ? JSON.stringify(body.detail) : 'Login failed');
+        }
+        const data = await res.json();
+        localStorage.setItem('mikura_token', data.token);
+        localStorage.setItem('mikura_user', JSON.stringify(data.user));
+        window.location.href = '/dashboard';
+      } catch (err) {
+        errorEl.textContent = err.message;
+      }
+    });
+  </script>
+</body>
+
+</html>
