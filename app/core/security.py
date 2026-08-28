@@ -37,13 +37,9 @@ def _extract_claims(token: str) -> dict:
         ) from exc
 
 
-async def get_current_user(
-    credentials: HTTPAuthorizationCredentials | None = Depends(_bearer_scheme),
-) -> CurrentUser:
-    if credentials is None or not credentials.credentials:
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Missing bearer token")
-
-    token = credentials.credentials
+def resolve_user_from_token(token: str) -> CurrentUser:
+    """Decodes a raw bearer token into a `CurrentUser`. Shared by the FastAPI
+    dependencies below and by the MCP server's own login gate."""
     claims = _extract_claims(token)
     return CurrentUser(
         id=str(claims.get("sub", claims.get("id", ""))),
@@ -52,6 +48,14 @@ async def get_current_user(
         level=claims.get("level"),
         token=token,
     )
+
+
+async def get_current_user(
+    credentials: HTTPAuthorizationCredentials | None = Depends(_bearer_scheme),
+) -> CurrentUser:
+    if credentials is None or not credentials.credentials:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Missing bearer token")
+    return resolve_user_from_token(credentials.credentials)
 
 
 async def get_token_from_query_or_header(
@@ -65,15 +69,7 @@ async def get_token_from_query_or_header(
     raw_token = credentials.credentials if credentials else token
     if not raw_token:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Missing bearer token")
-
-    claims = _extract_claims(raw_token)
-    return CurrentUser(
-        id=str(claims.get("sub", claims.get("id", ""))),
-        name=str(claims.get("name", "")),
-        role=str(claims.get("role", "")),
-        level=claims.get("level"),
-        token=raw_token,
-    )
+    return resolve_user_from_token(raw_token)
 
 
 def require_manager(user: CurrentUser = Depends(get_current_user)) -> CurrentUser:
