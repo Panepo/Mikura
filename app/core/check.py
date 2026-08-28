@@ -24,7 +24,7 @@ def check_ids(project_name: str, ids: list) -> bool:
     new_ids_str = "".join(sorted(new_ids))
 
     # Compare the two strings
-    return ids_str == new_ids_str
+    return ids_str != new_ids_str
 
 def fetch_data(project_name: str) -> list:
     """

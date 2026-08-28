@@ -94,7 +94,7 @@
           : '<span class="badge">no builds</span>';
 
         const fileLinks = files
-          .map((f) => `<a href="/download/${project.id}/${f.id}?token=${encodeURIComponent(token)}">${f.file_name}</a>`)
+          .map((f) => `<button class="download-btn" onclick="window.location.href='/download/${project.id}/${f.id}?token=${encodeURIComponent(token)}'">${f.file_name}</button>`)
           .join('<br/>');
 
         tr.innerHTML = `

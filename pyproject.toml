@@ -21,4 +21,4 @@ dependencies = [
 ]
 
 [tool.poe.tasks]
-dev = "uvicorn app.main:app --host 127.0.0.1 --port 8000 --reload"
+dev = "uvicorn app.main:app --host 127.0.0.1 --port 7700 --reload"
