@@ -50,8 +50,8 @@ async def _request(method: str, path: str, **kwargs) -> httpx.Response:
     return response
 
 
-async def login(username: str, password: str) -> dict:
-    response = await _request("POST", "/auth", json={"email": username, "password": password, "server": "shigure"})
+async def login(email: str, password: str) -> dict:
+    response = await _request("POST", "/auth", json={"email": email, "password": password, "server": "mikura"})
     return response.json()
 
 

@@ -16,10 +16,10 @@ class ShigureApiError(Exception):
         super().__init__(f"Shigure API error {status_code}: {detail}")
 
 
-def login(username: str, password: str) -> dict:
+def login(email: str, password: str) -> dict:
     url = f"{settings.shigure_api_base_url.rstrip('/')}/auth"
     with httpx.Client(timeout=30.0) as client:
-        response = client.post(url, json={"username": username, "password": password})
+        response = client.post(url, json={"email": email, "password": password, "server": "mikura"})
     if response.status_code >= 400:
         try:
             detail = response.json()
