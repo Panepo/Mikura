@@ -22,3 +22,6 @@ dependencies = [
 
 [tool.poe.tasks]
 dev = "uvicorn app.main:app --host 127.0.0.1 --port 7700 --reload"
+
+[tool.pytest.ini_options]
+addopts = "-s"

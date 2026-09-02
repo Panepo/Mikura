@@ -1,3 +1,4 @@
+from app.core.fetch import fetch_ids
 
 def check_ids(project_name: str, ids: list) -> bool:
     """
@@ -17,7 +18,7 @@ def check_ids(project_name: str, ids: list) -> bool:
     if not ids:
         return False
 
-    new_ids = fetch_data(project_name)
+    new_ids = fetch_ids(project_name)
 
     # Sort and join the lists into strings
     ids_str = "".join(sorted(ids))
@@ -25,17 +26,3 @@ def check_ids(project_name: str, ids: list) -> bool:
 
     # Compare the two strings
     return ids_str != new_ids_str
-
-def fetch_data(project_name: str) -> list:
-    """
-    Fetch the necessary data for packaging based on the project name.
-
-    Args:
-        project_name (str): The name of the project.
-
-    Returns:
-        list: A list of ids which belong to the necessary data for packaging.
-    """
-    # Implement your data fetching logic here
-    data = ["example_data1", "example_data2"]
-    return data

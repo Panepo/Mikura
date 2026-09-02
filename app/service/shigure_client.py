@@ -13,16 +13,16 @@ from app.core.config import get_settings
 settings = get_settings()
 
 _SUPPORTED_TABLES = {
-    "driver",
-    "driverprj",
-    "bios",
-    "biosprj",
-    "ec",
-    "ecprj",
-    "app",
-    "appprj",
-    "file",
-    "appfile",
+    "DRIVER",
+    "DRIVERPRJ",
+    "BIOS",
+    "BIOSPRJ",
+    "EC",
+    "ECPRJ",
+    "APP",
+    "APPPRJ",
+    "FILE",
+    "APPFILE",
 }
 
 
@@ -113,6 +113,12 @@ async def query_projects(name: str, token: str) -> list[dict]:
     response = await _request("GET", f"/project/query/{name}", headers=_auth_headers(token))
     payload = response.json()
     return payload.get("data", []) if isinstance(payload, dict) else payload
+
+
+async def get_project_by_name(prjName: str, token: str) -> dict:
+    """Get a specific project by its name (see `GET /project/:prjName`)."""
+    response = await _request("GET", f"/project/{prjName}", headers=_auth_headers(token))
+    return response.json()
 
 
 async def download(table: str, item_id: str, token: str, data_type: str | None = None) -> httpx.Response:
